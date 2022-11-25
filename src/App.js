@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import SearchBar from './components/searchbar';
 
 function App() {
   return (
@@ -9,14 +10,7 @@ function App() {
         <p>
           Starting Bula Downloader
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <SearchBar />
       </header>
     </div>
   );
