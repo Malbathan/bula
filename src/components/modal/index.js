@@ -23,6 +23,8 @@ export default function DrugModal({ number }) {
           const { data } = await getRemedyLeaflet(number);
 
           const { config } = await getPDF(remedy.codigoBulaPaciente);
+					console.log("TCL: fetch -> remedy.codigoBulaPaciente", remedy.codigoBulaPaciente)
+
 
           setRemedy(data);
 
@@ -105,7 +107,6 @@ export default function DrugModal({ number }) {
                 </div>
               ) : (
                 <p>
-                  {" "}
                   Não encontramos o remedio em nossos dados, confira o nome do
                   remedio desejado e tente novamente!
                 </p>

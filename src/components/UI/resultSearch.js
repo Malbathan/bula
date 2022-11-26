@@ -5,6 +5,7 @@ export const ResultBox = styled.div`
   border-radius: 5px;
 
   max-height: 300px;
+  max-width: 18em;
   overflow:hidden;
   overflow-y: auto;
   position:relative;
@@ -23,9 +24,15 @@ export const Item = styled.div `
   padding: 24px 32px;
 
   gap: 16px;
-
+ 
   &:hover {
     background-color: #e9e9e9;
     cursor: pointer;
   }
+`
+export const Text = styled.p`
+  text-overflow: ellipsis;
+  max-width: 7em;
+  max-height: 90px;
+  overflow: hidden;
 `

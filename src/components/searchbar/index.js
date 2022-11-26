@@ -5,7 +5,7 @@ import { getRemedyName } from "../../services/search";
 import { SearchBox } from  "../UI/box"
 
 import DrugModal from "../modal";
-import { ResultBox, Item } from "../UI/resultSearch";
+import { ResultBox, Item , Text} from "../UI/resultSearch";
 
 const SearchBar = () => {
   const [remedy, setRemedy] = useState("");
@@ -94,7 +94,7 @@ const SearchBar = () => {
           <ResultBox>
             { filterSearch?.map(element =>
               <Item key={element.idProduto} onClick={() => handleClickAutoComplete(element)}>
-                <p> {element.nomeProduto} </p>
+                <Text> {element.nomeProduto} </Text>
               </Item>)
             }
           </ResultBox>
