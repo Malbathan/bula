@@ -55,7 +55,7 @@ export default function DrugModal({ number }) {
     setShow(false);
     setRemedy("");
   };
-  console.log(remedy);
+  
   return (
     <>
       <Button
@@ -101,7 +101,7 @@ export default function DrugModal({ number }) {
                     <TitleText>Nome do Fabricante:</TitleText>
                     <TextDescription>{remedy?.empresa?.razaoSocial}</TextDescription>
                   </div>
-                  <Button onClick={handleClickChangeID} />
+                  <Button className="float-end" onClick={handleClickChangeID} > Gerar PDF </Button>
                 </div>
               ) : (
                 <p>

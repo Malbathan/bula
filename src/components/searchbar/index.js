@@ -24,7 +24,6 @@ const SearchBar = () => {
 
  useEffect(()=> {
   if(nome.length > 0) {
-    console.log(nome.length > 0)
     const fetch = async() => {
       try {
         const { data } = await getRemedyName(nome);
