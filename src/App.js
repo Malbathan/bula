@@ -1,13 +1,14 @@
 import './App.css';
 import SearchBar from './components/searchbar';
 
+
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          Starting Bula Downloader
-        </p>
+        <div>
+          <img src={"/logo.png"} alt="titulo"/>
+        </div>
         <SearchBar />
       </header>
     </div>

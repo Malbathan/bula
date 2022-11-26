@@ -1,56 +1,69 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import React, { useState, useEffect } from "react";
+
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { getRemedyLeaflet, getPDF } from '../../services/search';
+import { Image } from "../UI/loading";
 
-export default function DrugModal({number}) {
+import { getRemedyLeaflet, getPDF } from "../../services/search";
+import { TextDescription, TitleText } from "../UI/modal";
+
+export default function DrugModal({ number }) {
   const [show, setShow] = useState(false);
-  const [remedy, setRemedy] = useState("")
-  const [id, setId] = useState("")
-  const [download, setDownload] = useState("")
-  
-  const getRemedy = useCallback(async() => {
-    try {
-      const { data } = await getRemedyLeaflet(number);
-      setRemedy(data);
-      setId(remedy.codigoBulaPaciente)
+  const [remedy, setRemedy] = useState("");
+  const [download, setDownload] = useState("");
+  const [loading, setLoading] = useState(true);
 
-    } catch (error) {
-      console.error(error);
+  useEffect(() => {
+    if (number.length > 0) {
+      const fetch = async () => {
+        try {
+          setLoading(true);
+          const { data } = await getRemedyLeaflet(number);
+
+          const { config } = await getPDF(remedy.codigoBulaPaciente);
+
+          setRemedy(data);
+
+          setDownload(`${config.baseURL}${config.url}`);
+
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+
+          console.error(error);
+        }
+      };
+
+      fetch();
     }
   }, [number, remedy.codigoBulaPaciente]);
 
-  const getLeafLetPDF = useCallback(async() => {
-    try {
-      const  {config}  = await getPDF(id);
-      console.log(config.baseURL + config.url)
-      setDownload(config.baseURL + config.url)
-    } catch (error) {
-      console.error(error);
-    }
-  }, [id]);
-
-  useEffect(() => {
-    if(!!number) getRemedy();
-    if(!!id) getLeafLetPDF();
-
-  }, [getLeafLetPDF, getRemedy, id, number] );
-
   const handleClickChangeID = (e) => {
     e.preventDefault();
-    window.open(download, "_blank")
-  }
+
+    if (download.length > 0) {
+      window.open(download, "_blank");
+    } else {
+      window.alert("aguarde");
+      setTimeout(() => window.open(download, "_blank"));
+    }
+  };
 
   const handleHide = () => {
-    setShow(false)
-    setRemedy('')
-  }
-
+    setShow(false);
+    setRemedy("");
+  };
+  console.log(remedy);
   return (
     <>
-      <Button variant="primary" id='modal' onClick={() => setShow(true)}>
+      <Button
+        style={{ display: "none" }}
+        variant="primary"
+        id="modal"
+        onClick={() => setShow(true)}
+      >
         Custom Width Modal
       </Button>
 
@@ -63,37 +76,44 @@ export default function DrugModal({number}) {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title id="example-custom-modal-styling-title">
-            {remedy.nomeComercial}
-          </Modal.Title>
+          {loading ? null : (
+            <Modal.Title id="example-custom-modal-styling-title">
+              {remedy.nomeComercial}
+            </Modal.Title>
+          )}
         </Modal.Header>
         <Modal.Body>
-          
-            {remedy ? 
-            <div> 
-              <p>
-                Classes Terapeuticas:
-                {remedy?.classesTerapeuticas}
-                Princípio Ativo:
-                {remedy?.principioAtivo}
-                Medicamento de Referência:
-                {remedy?.medicamentoReferencia}
-                Categoria Regulatória:
-                {remedy?.categoriaRegulatoria}
-                Nome do Fabricante:
-                {remedy?.empresa?.razaoSocial}
-              </p>
-              <Button onClick={handleClickChangeID}/>
+          {loading ? (
+            <Image src={"/loading.gif"} alt="loading..." />
+          ) : (
+            <div>
+              {!!remedy ? (
+                <div>
+                  <div>
+                    <TitleText>Classes Terapeuticas:</TitleText>
+                    <TextDescription>{remedy?.classesTerapeuticas}</TextDescription>
+                    <TitleText>Princípio Ativo:</TitleText>
+                    <TextDescription>{remedy?.principioAtivo}</TextDescription>
+                    <TitleText>Medicamento de Referência:</TitleText>
+                    <TextDescription>{remedy?.medicamentoReferencia}</TextDescription>
+                    <TitleText>Categoria Regulatória:</TitleText>
+                    <TextDescription>{remedy?.categoriaRegulatoria}</TextDescription>
+                    <TitleText>Nome do Fabricante:</TitleText>
+                    <TextDescription>{remedy?.empresa?.razaoSocial}</TextDescription>
+                  </div>
+                  <Button onClick={handleClickChangeID} />
+                </div>
+              ) : (
+                <p>
+                  {" "}
+                  Não encontramos o remedio em nossos dados, confira o nome do
+                  remedio desejado e tente novamente!
+                </p>
+              )}
             </div>
-            : <p> Não encontramos o remedio em nossos dados, confira o nome do remedio desejado e tente novamente!</p>
-            }
-          
-
-          
+          )}
         </Modal.Body>
-       
       </Modal>
     </>
   );
 }
-
